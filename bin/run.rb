@@ -133,27 +133,29 @@ end
 #_________________________________________________
 # view favorites
 def view_user_favorites
-    faves = User.favorites.reload
-  
-    if faves.empty?
-      puts "You don't have any favorites saved yet!"
-      puts "Returning to main menu..."
-      main_menu
-    else
-      
-      puts "Here are your favorite playlists:"
-      i = 1
-      faves.each do |fave|
-        puts "#{i}. #{fave.playlist.name}"
-        i += 1
-        sleep(0.5)
-      end
-      puts "Returning to main menu..."
-      main_menu
+  faves = $username.favorites.reload
+
+  if faves.empty?
+    
+    puts "You don't have any favorites saved yet!"
+    puts "Returning to main menu..."
+    main_menu
+  else
+    
+    puts "Here are your favorite playlists:"
+    i = 1
+    faves.each do |fave|
+      puts "#{i}. #{fave.playlist.name}"
+      i += 1
+      sleep(0.5)
     end
-  
+    
+    puts "Returning to main menu..."
+    main_menu
   end
-  
+
+end
+
   # _________________________________________________________
   
   
@@ -209,6 +211,8 @@ def view_user_favorites
     User.delete_favorite(fav_to_delete)
     main_menu
   end
+
+  #g get the user to delete their playlist
   
   def display_faves(favorites)
     puts "Here are all your favorites:"
@@ -216,10 +220,12 @@ def view_user_favorites
       playlist = Playlist.find(fave.playlist_id)
       puts "#{i+1}. #{playlist.name}"
     end
-    puts
+
+    # here I want to display the user's favorited playlists
+    # before they can delete it
+    
     print "Which playlist would you like to remove from favorites? "
     play_num = gets.chomp.to_i
-    puts
     playlist = Playlist.find(favorites[play_num-1].playlist_id)
     print "Confirm deletion of #{playlist.name}? (y/n) "
     yn = gets.chomp
@@ -227,6 +233,9 @@ def view_user_favorites
       playlist
     end
   end
+  # here I want to ask them what playlist would you like to remove?
+  # when they enter the name, i am then comfirming if they are sure
+  # that they would like to delete it
   
   
   def run

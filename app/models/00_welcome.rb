@@ -10,17 +10,7 @@ puts font.write("Mood Music Maker").colorize(:white)
 
 
 
-def get_user_name_from_db
-    print "Please enter your first name: "
-    name = gets.chomp
-    user = User.find_by(name: name)
-    if user == nil
-      puts user_equals_nil
-    else
-      puts "Welcome back, #{User.name}!"
-      return user
-    end
-  end
+
 
   # here when a user enters their name, if it is already in the database it will pull the name up and put "Welcome back, user.name"
   
@@ -48,7 +38,7 @@ def get_user_name_from_db
       # view user's favorite playlist
       view_user_favorites
     when "3"
-      # view most popular playlist
+      #view_most_popular_playlist
       most_popular_playlists
     when "4"
       delete_favorite(playlist)
