@@ -40,4 +40,3 @@ end
 Favorite.create(user_id: User.all.sample.id, playlist_id: drake_list.id)
 Favorite.create(user_id: User.all.sample.id, playlist_id: happy2_list.id)
 Favorite.create(user_id: User.all.sample.id, playlist_id: happy_list.id)
-
