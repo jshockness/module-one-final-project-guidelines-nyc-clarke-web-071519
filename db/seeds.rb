@@ -7,7 +7,8 @@ Playlist.destroy_all
 SongPlaylist.destroy_all
 Favorite.destroy_all
 
-alyssa = User.create(name: "Alyssa")
+
+
 10.times do 
     User.create(name: Faker::Name.first_name)
 end

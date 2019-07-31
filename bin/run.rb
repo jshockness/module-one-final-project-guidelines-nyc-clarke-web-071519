@@ -12,7 +12,7 @@ def playlist_search
   # method of creating a playlist array that is created with the mood when user enters the mood
   limit = get_playlist_limit(playlist_array, mood)
   # if there are only 4 "sad" moods in the db and the user enter 6, it returns 
-  selected_playlists = view_playlists(playlist_array, limit)
+  selected_playlists = view_playlists(playlist_array)
   # it displays the selected playlists and gives the user the number of playlists that are associated with that mood
   mms = mood_menu
   mood_menu_selection(mms, selected_playlists)
@@ -53,8 +53,8 @@ def get_playlist_limit(playlist_array, mood)
   end
   # when the user does enter a mood that is associated with the playlist, it allows the user
   # to choose how many they would like to see
-  puts "There are #{playlist_array.length} playlists that include #{mood}."    
-  puts "How many would you like to view?"
+  puts "Here are #{playlist_array.length} playlists that include #{mood}."    
+  puts "Press ENTER to view the playlists:"
   
   choice = gets.chomp.to_i
 
@@ -69,12 +69,12 @@ def get_playlist_limit(playlist_array, mood)
   end
 end
 
-def view_playlists(playlist_array, limit)
+def view_playlists(playlist_array)
   
   # if the user enters they want to see 2 out of the 2 "sad" playlists, it displays "here you go"
   # it goes through each playlist by the index and displays them in order on seperate lines
   puts "Here you go!"
-  playlist_array[0...limit.to_i].each_with_index do |playlist, i|
+  playlist_array.each_with_index do |playlist, i|
    
     puts "#{i+1}. #{playlist.name}"
     
@@ -88,6 +88,7 @@ def mood_menu
   puts "Please choose one:"
   puts "1. Return to main menu"
   puts "2. Save a playlist to favorites"
+  puts "3. View songs within selected playlist"
   choice = gets.chomp
 end
 
@@ -138,7 +139,6 @@ def save_to_favorites(selected_playlists)
       case choice
       when "y", "yes"
         User.add_favorite(playlist)
-        puts
         puts "#{playlist.name} added to your favorites!"
       when "n", "no"
         puts "Returning to main menu..."
@@ -186,7 +186,6 @@ end
 
   # _________________________________________________________
   
-  
   def most_popular_playlists
     results = Favorite.all.group(:playlist_id).count
     results = results.sort_by {|x , y| y }.reverse
@@ -200,7 +199,11 @@ end
     # and asking the user how many of the most favorited websites they would like to see
   
     if user_input > results.count
+      sleep(2.0)
         puts "Oops...sorry! We only have #{results.count} playlists favorited!"
+        sleep(3.0)
+        puts "Here are the top #{results.count} playlists!" 
+        sleep(3.0)
         user_input = results.count
     end
   
