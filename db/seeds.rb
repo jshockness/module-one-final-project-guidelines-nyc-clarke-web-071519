@@ -142,7 +142,6 @@ sad_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: sad_playlist.id)
 end
 
-<<<<<<< HEAD
 
 #---------------------------------- Workout Playlist
 workout_songs = [Song.create(name: "KIKA (feat.Tory Lanez)", artist: "6ix9ine"),
@@ -257,8 +256,3 @@ end
 
 
 Favorite.create(user_id: User.first.id, playlist_id: drake_playlist.id)
-=======
-Favorite.create(user_id: User.all.sample.id, playlist_id: drake_list.id)
-
-
->>>>>>> alyssa_farina

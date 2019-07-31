@@ -1,11 +1,11 @@
 class User < ActiveRecord::Base
     has_many :favorites
+    has_many :playlist
     has_many :playlists, through: :favorites
 end 
 
 def add_favorite(playlist)
     f = Favorite.create(playlist_id: playlist.id, user_id: self.id)
-  
   end
 
   def delete_favorite(playlist)
