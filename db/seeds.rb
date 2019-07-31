@@ -22,6 +22,7 @@ Song.create(name: "In My Feelings", artist: "Drake")
 drake_list = Playlist.create(name: "Drake",mood: "Drake")
 not_drake_list = Playlist.create(name: "Not-Drake",mood: "Not-Drake")
 happy_list = Playlist.create(name: "Happy Vibes", mood: "Happy")
+happy2_list = Playlist.create(name: "Don't Worry, Be Happy" , mood: "Happy")
 
 just_drake  = Song.all.select do|song|
     song.artist == "Drake"
