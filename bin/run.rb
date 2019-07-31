@@ -46,7 +46,7 @@ def get_playlist_limit(playlist_array, mood)
   choice = gets.chomp.to_i
 
   if choice > playlist_array.length
-    puts
+  
     puts "Oops! There are only #{playlist_array.length} playlists!"
     choice = playlist_array.length
   else
@@ -70,6 +70,7 @@ def mood_menu
   puts "Please choose one:"
   puts "1. Return to main menu"
   puts "2. Save a playlist to favorites"
+  puts "3. Delete a playlist"
   choice = gets.chomp
 end
 
