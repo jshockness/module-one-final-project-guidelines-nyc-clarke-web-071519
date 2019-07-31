@@ -139,6 +139,16 @@ def save_to_favorites(selected_playlists)
 
 
 # view favorites method
+  
+
+
+# _________________________________________________________
+  
+#show most popular favorited by users
+# here we are showing the top favorites playlist that has been favorited by users
+  # we are taking the user input and putting the result in an indexed
+  # order list so that the viewer can see the list in a neat way
+
   def most_popular_playlists
     results = Favorite.all.group(:playlist_id).count
     results = results.sort_by {|x , y|}.uniq
@@ -184,16 +194,6 @@ def save_to_favorites(selected_playlists)
         sleep(1.0)
     end
   end
-
-
-# _________________________________________________________
-  
-
-  
- 
-  # here we are showing the top favorites playlist that has been favorited by users
-  # we are taking the user input and putting the result in an indexed
-  # order list so that the viewer can see the list in a neat way
   #____________________________________________________________
 
   # show songs from a playlist
@@ -203,13 +203,14 @@ def save_to_favorites(selected_playlists)
 
 
   #________________________________________________________________
+
   def main_menu
     puts "MAIN MENU"
   
     puts "1. find a playlist by mood"
     puts "2. view your favorite playlists"
     puts "3. view most popular playlist among users"
-    puts "4. view  songs from a playlist"
+    puts "4. view songs from a playlist"
     puts "5. exit"
     choice = gets.chomp
     menu_selection(choice)
