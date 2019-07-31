@@ -21,6 +21,7 @@ Song.create(name: "In My Feelings", artist: "Drake")
 
 drake_list = Playlist.create(name: "Drake",mood: "Drake")
 not_drake_list = Playlist.create(name: "Not-Drake",mood: "Not-Drake")
+happy_list = Playlist.create(name: "Happy Vibes", mood: "Happy")
 
 just_drake  = Song.all.select do|song|
     song.artist == "Drake"
@@ -31,3 +32,4 @@ just_drake.each do |song|
 end
 
 Favorite.create(user_id: User.all.sample.id, playlist_id: drake_list.id)
+
