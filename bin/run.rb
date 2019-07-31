@@ -141,7 +141,7 @@ def save_to_favorites(selected_playlists)
 # view favorites method
   def most_popular_playlists
     results = Favorite.all.group(:playlist_id).count
-    results = results.sort_by {|x , y| y }.reverse
+    results = results.sort_by {|x , y|}.uniq
     puts "There are #{results.count} playlists favorited."
     print "How many playlists would you like to see?"
     user_input = gets.chomp.to_i
@@ -153,7 +153,7 @@ def save_to_favorites(selected_playlists)
   
     if user_input > results.count
       sleep(2.0)
-        puts "Oops...sorry! We only have #{results.count} playlists favorited!"
+        puts "Oops...sorry! You only have #{results.count} playlists favorited!"
         sleep(3.0)
         puts "Here are the top #{results.count} playlists!" 
         sleep(3.0)
@@ -255,6 +255,8 @@ abort("EXIT!!")
       puts "5. exit"
   
       choice = gets.chomp
+
+      
       
       menu_selection(choice)
 
