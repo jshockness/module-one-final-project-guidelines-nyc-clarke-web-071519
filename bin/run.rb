@@ -1,14 +1,19 @@
 require_relative '../config/environment'
 require 'tty-font'
 require 'tty-prompt'
+require 'pry'
 
 # find playlist by mood
 
 def playlist_search
   mood = get_mood_from_user
+  # method that gets the mood input from a user
   playlist_array = create_playlist_array(mood)
+  # method of creating a playlist array that is created with the mood when user enters the mood
   limit = get_playlist_limit(playlist_array, mood)
+  # if there are only 4 "sad" moods in the db and the user enter 6, it returns 
   selected_playlists = view_playlists(playlist_array, limit)
+  # it displays the selected playlists and gives the user the number of playlists that are associated with that mood
   mms = mood_menu
   mood_menu_selection(mms, selected_playlists)
   main_menu
@@ -34,17 +39,27 @@ def create_playlist_array(mood)
   return arr.uniq
 end
 
+# here we are creating an array that takes in the users input of mood and is selecting the array of moods that 
+# are associated with the playlists
+
 def get_playlist_limit(playlist_array, mood)
-  puts
+ 
+  # if the user enters a mood that is not associated with a playlist, the user is prompted to re-enter a mood
   if playlist_array.empty?
     puts "Sorry, there are no playlists with #{mood}!"
     puts "Let's try again..."
+    
     playlist_search
   end
-  puts "There are #{playlist_array.length} playlists that include #{mood}. How many would you like to view?"
+  # when the user does enter a mood that is associated with the playlist, it allows the user
+  # to choose how many they would like to see
+  puts "There are #{playlist_array.length} playlists that include #{mood}."    
+  puts "How many would you like to view?"
   
   choice = gets.chomp.to_i
 
+  # here if the user enters they want to view 5 playlists for the mood "sad" but there are only 3
+  # it tells them that there are only 3 playlists and displays the correct number of playlists
   if choice > playlist_array.length
   
     puts "Oops! There are only #{playlist_array.length} playlists!"
@@ -56,21 +71,23 @@ end
 
 def view_playlists(playlist_array, limit)
   
+  # if the user enters they want to see 2 out of the 2 "sad" playlists, it displays "here you go"
+  # it goes through each playlist by the index and displays them in order on seperate lines
   puts "Here you go!"
   playlist_array[0...limit.to_i].each_with_index do |playlist, i|
    
     puts "#{i+1}. #{playlist.name}"
-    puts "#{playlist.mood}"
-    sleep(0.5)
+    
+    sleep(1.5)
   end
 end
+sleep(3.0)
 
 def mood_menu
  
   puts "Please choose one:"
   puts "1. Return to main menu"
   puts "2. Save a playlist to favorites"
-  puts "3. Delete a playlist"
   choice = gets.chomp
 end
 
@@ -99,6 +116,8 @@ def in_user_favorites?(playlists)
   false
 end
 
+# here we are iterating thrpugh the fav to make sure that the fav is in the user's favorited playlists
+
 def save_to_favorites(selected_playlists)
   isrunning = true
   while isrunning
@@ -107,8 +126,9 @@ def save_to_favorites(selected_playlists)
     if choice.start_with?("q")
       break
     end
-    playlist = selected_playlists[choice.to_i - 1]
+    playlist = selected_playlists[choice.to_i]
 
+    # if the user selects to 
     if in_user_favorites?(playlist)
       puts "You've already added this playlist to your favorites!"
       next
@@ -133,36 +153,43 @@ end
 
 #_________________________________________________
 # view favorites
-def view_user_favorites
-  faves = $username.favorites.reload
+#def view_user_favorites
+  #faves = User.favorites
 
-  if faves.empty?
+  #if faves.empty?
     
-    puts "You don't have any favorites saved yet!"
-    puts "Returning to main menu..."
-    main_menu
-  else
-    
-    puts "Here are your favorite playlists:"
-    i = 1
-    faves.each do |fave|
-      puts "#{i}. #{fave.playlist.name}"
-      i += 1
-      sleep(0.5)
-    end
-    
-    puts "Returning to main menu..."
-    main_menu
-  end
+   # puts "You don't have any favorites saved yet!"
+    #puts "Returning to main menu..."
+    #main_menu
 
-end
+     # here we are checking to see if the user has any favorites, if they do not 
+    # then it returns them to the main menu
+    
+  #else
+
+
+    #puts "Here are your favorite playlists:"
+   # i = 1
+    #faves.each do |fave|
+     # puts "#{i}. #{fave.playlist.name}"
+     # i += 1
+   
+    #end
+
+    # if the user does have some favorites saved, then it shows the user their favorite playlists names
+    
+   # puts "Returning to main menu..."
+    #main_menu
+  #end
+
+#end
 
   # _________________________________________________________
   
   
   def most_popular_playlists
     results = Favorite.all.group(:playlist_id).count
-    results = results.sort_by {|x , y| y}.reverse
+    results = results.sort_by {|x , y| y }.reverse
     puts "There are #{results.count} playlists favorited."
     print "How many playlists would you like to see?"
     user_input = gets.chomp.to_i
@@ -183,8 +210,8 @@ end
   
   show_favorites(results, user_input)
     sleep(5)
-    puts "Screen will clear in 8 seconds!!"
-    sleep(8)
+    puts "Screen will clear in 5 seconds!!"
+    sleep(5)
     system "clear"
     main_menu
     end
@@ -203,41 +230,39 @@ end
   end
   
   # here we are showing the top favorites playlist that has been favorited by users
+  # we are taking the user input and putting the result in an indexed
+  # order list so that the viewer can see the list in a neat way
   #____________________________________________________________
 
-  # delete a playlisy from favorites
-  def get_playlist_to_delete
-    favorites = User.favorites
-    fav_to_delete = display_faves(favorites)
-    User.delete_favorite(fav_to_delete)
-    main_menu
+  # delete a playlist from favorites method
+
+
+
+  #________________________________________________________________
+
+  def menu_selection(choice)
+    case choice
+    when "1"
+      # search for a playlist by mood
+     playlist_search
+    when "2"
+      # view user's favorite playlist
+      view_user_favorites
+    when "3"
+      #view_most_popular_playlist
+      most_popular_playlists
+    when "4"
+      delete_favorite(playlist)
+      # delete a user's favorite playlist
+    when "5", "exit"
+      exit
+exit!
+abort("EXIT!!")
+    end
+    menu_selection
   end
 
-  #g get the user to delete their playlist
-  
-  def display_faves(favorites)
-    puts "Here are all your favorites:"
-    favorites.each_with_index do |fave, i|
-      playlist = Playlist.find(fave.playlist_id)
-      puts "#{i+1}. #{playlist.name}"
-    end
-
-    # here I want to display the user's favorited playlists
-    # before they can delete it
-    
-    print "Which playlist would you like to remove from favorites? "
-    play_num = gets.chomp.to_i
-    playlist = Playlist.find(favorites[play_num-1].playlist_id)
-    print "Confirm deletion of #{playlist.name}? (y/n) "
-    yn = gets.chomp
-    if yn.start_with?("y")
-      playlist
-    end
-  end
-  # here I want to ask them what playlist would you like to remove?
-  # when they enter the name, i am then comfirming if they are sure
-  # that they would like to delete it
-  
+  #_________________________________________________
   
   def run
       print "Please enter your first name: "

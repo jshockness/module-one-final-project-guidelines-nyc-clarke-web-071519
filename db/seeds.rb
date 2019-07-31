@@ -7,6 +7,7 @@ Playlist.destroy_all
 SongPlaylist.destroy_all
 Favorite.destroy_all
 
+alyssa = User.create(name: "Alyssa")
 10.times do 
     User.create(name: Faker::Name.first_name)
 end
@@ -36,4 +37,6 @@ just_drake.each do |song|
 end
 
 Favorite.create(user_id: User.all.sample.id, playlist_id: drake_list.id)
+Favorite.create(user_id: User.all.sample.id, playlist_id: happy2_list.id)
+Favorite.create(user_id: User.all.sample.id, playlist_id: happy_list.id)
 

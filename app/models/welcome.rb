@@ -41,7 +41,7 @@ puts font.write("Mood Music Maker").colorize(:white)
       #view_most_popular_playlist
       most_popular_playlists
     when "4"
-      delete_favorite(playlist_search)
+      delete_favorite(playlist)
       # delete a user's favorite playlist
     when "5", "exit"
       exit
