@@ -138,7 +138,28 @@ def save_to_favorites(selected_playlists)
 
 # view favorites method
   
+def view_user_favorites
+  faves = @current_user.favorites.reload
 
+  if faves.empty?
+    
+    puts "You don't have any favorites saved yet!"
+    puts "Returning to main menu..."
+    main_menu
+  else
+    
+    puts "Here are your favorite playlists:"
+   
+    faves.each do |fave|
+      puts "#{fave.playlist.name}"
+      sleep(0.5)
+    end
+    
+    puts "Returning to main menu..."
+    main_menu
+  end
+
+end
 
   #____________________________________________________________
 
@@ -148,11 +169,36 @@ def save_to_favorites(selected_playlists)
 
   end
 
+#________________________________________________________________
+  #delete playlist from user's favorite
 
 
 
 
-
+  def delete_playlist
+    favorites = @current_user.favorites
+    fav_to_delete = display_faves(favorites)
+    @current_user.delete_favorite(fav_to_delete)
+    main_menu
+  end
+  
+  def display_faves(favorites)
+    puts "Here are all your favorites:"
+    favorites.each_with_index do |fave, i|
+      playlist = Playlist.find(fave.playlist_id)
+      puts "#{i+1}. #{playlist.name}"
+    end
+    
+    print "Which playlist would you like to remove from favorites? "
+    user_input = gets.chomp.to_i
+    playlist = Playlist.find(favorites[user_input-1].playlist_id)
+    print "Confirm deletion of #{playlist.name}? (y/n) "
+    user_input = gets.chomp.downcase
+    if user_input.start_with?("y")
+      playlist
+    end
+  end
+  
   #________________________________________________________________
 
   def main_menu
@@ -161,6 +207,7 @@ def save_to_favorites(selected_playlists)
     puts "1. Find a playlist by mood"
     puts "2. View your favorite playlists"
     puts "3. View a playlist's songs"
+    puts "5. Delete a playlist from favorites"
     puts "4. exit"
     choice = gets.chomp
     menu_selection(choice)
@@ -177,7 +224,9 @@ def save_to_favorites(selected_playlists)
     when "3"
       show_playlist_songs
       # show a user's playlist songs
-    when "4", "exit"
+    when "4"
+      delete_playlist
+    when "5", "exit"
       exit
 exit!
 abort("EXIT!!")
@@ -201,7 +250,8 @@ abort("EXIT!!")
       puts "1. Find a playlist by mood"
       puts "2. View a user's favorite playlists"
       puts "3. View songs from a playlist"
-      puts "4. exit"
+      puts "4. Delete playlist from favorite"
+      puts "5. exit"
   
       choice = gets.chomp
 
