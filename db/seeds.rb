@@ -23,7 +23,7 @@ drake_songs = [Song.create(name: "Nonstop", artist: "Drake"),
     Song.create(name: "Mob Ties", artist: "Drake"),
     Song.create(name: "In My Feelings", artist: "Drake")]
     
-drake_playlist = Playlist.create(name:"Drake Playlist", mood:"Drake")
+drake_playlist = Playlist.create(name:"Just Drake It", mood:"Drake")
     
 drake_songs.each do |song| 
     SongPlaylist.create(playlist_id: drake_playlist.id, song_id: song.id)
@@ -51,7 +51,7 @@ dance_songs = [Song.create(name: "Summertime Magic", artist: "Childish Gambino")
     Song.create(name: "Welcome to the Party", artist: "Pop Smoke")]
     # Song.create(name: "In My Feelings", artist: "Drake")
 
-dance_playlist = Playlist.create(name: "Dance Playlist", mood: "Dance")
+dance_playlist = Playlist.create(name: "Dance Mode: On", mood: "Dance")
 
 dance_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: dance_playlist.id)
@@ -136,7 +136,7 @@ sad_songs = [Song.create(name: "the lonely", artist: "Christina Perri"),
     Song.create(name: "It Will Rain", artist: "Bruno Mars"),
     Song.create(name: "If I Ain't Got You", artist: "Alicia Keys")]
 
-sad_playlist = Playlist.create(name: "Sad Playlist", mood: "Sad")
+sad_playlist = Playlist.create(name: "Someone's Got the Blues: Who Brokeup with You?", mood: "Sad")
 
 sad_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: sad_playlist.id)
@@ -167,7 +167,7 @@ workout_songs = [Song.create(name: "KIKA (feat.Tory Lanez)", artist: "6ix9ine"),
     Song.create(name: "Dedication (feat. Kendrick Lamar)", artist: "Nipsey Hussle"),
     Song.create(name: "Eye of the Tiger", artist: "Survivor")]
 
-workout_playlist = Playlist.create(name: "Workout Playlist", mood: "Workout")
+workout_playlist = Playlist.create(name: "Game of Tone", mood: "Workout")
 
 workout_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: workout_playlist.id)
@@ -206,7 +206,7 @@ chill_songs = [Song.create(name: "Why (Remix)[feat. Leon Bridges]", artist: "Sha
     Song.create(name: "Tell Me When To Go (feat. Keak Da Sneak)", artist: "E-40")]
 
 
-chill_playlist = Playlist.create(name: "Chill Playlist", mood: "Chill")
+chill_playlist = Playlist.create(name: "Music & Chill?", mood: "Chill")
 
 chill_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: chill_playlist.id)
@@ -248,7 +248,7 @@ throwback_songs = [Song.create(name: "I Say a Little Prayer", artist: "Aretha Fr
     Song.create(name: "Where My Girls At", artist: "702"),
     Song.create(name: "I Wanna Be Down", artist: "Brandy")]
 
-throwback_playlist = Playlist.create(name: "Throwback Playlist", mood: "Throwback")
+throwback_playlist = Playlist.create(name: "Throwback Mode: Activated", mood: "Throwback")
 
 throwback_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: throwback_playlist.id)

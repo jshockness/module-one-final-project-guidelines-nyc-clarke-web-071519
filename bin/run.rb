@@ -1,6 +1,7 @@
 require_relative '../config/environment'
 require 'tty-font'
 require 'tty-prompt'
+require 'colorize'
 require 'pry'
 
 @prompt = TTY::Prompt.new
@@ -25,7 +26,7 @@ def playlist_search
 end
 
 def get_mood_from_user
-   puts "Please enter a mood:"
+   puts "Please enter a mood:".colorize(:color => :light_blue, :background => :red)
    mood = gets.chomp
 end
 
@@ -49,8 +50,8 @@ def get_playlist_limit(playlist_array, mood)
   # if the user enters a mood that is not associated with a playlist, the user is prompted to re-enter a mood
 
   if playlist_array.empty?
-    puts "Sorry, there are no playlists with #{mood}!"
-    puts "Let's try again..."
+    puts "Sorry, there are no playlists with #{mood}!".colorize(:color => :light_blue, :background => :yellow)
+    puts "Let's try again...".colorize(:yellow)
     
     playlist_search
   end
@@ -58,7 +59,7 @@ def get_playlist_limit(playlist_array, mood)
   # when the user does enter a mood that is associated with the playlist, it allows the user
   # to choose how many they would like to see
 
-  puts "Here is the #{playlist_array.length} playlist that include #{mood}."    
+  puts "Here is the #{playlist_array.length} playlist that include #{mood}." .colorize(:color => :light_blue, :background => :red)   
   puts "Press ENTER to view the playlist:"
   
   choice = gets.chomp.to_i
@@ -69,7 +70,7 @@ def view_playlists(playlist_array)
   
   # if the user enters they want to see 2 out of the 2 "sad" playlists, it displays "here you go"
   # it goes through each playlist by the index and displays them in order on seperate lines
-  puts "Here you go!"
+  puts "Here you go!".red
   playlist_array.each_with_index do |playlist, i|
    sleep(1.5)
     puts "#{i+1}. #{playlist.name}"
@@ -116,22 +117,25 @@ def in_user_favorites?(playlist)
   false
 end
 
-def add_favorite(playlist)
-  f = []
-  f = Favorite.create(playlist_id: playlist.id, user_id: user.id)
-  @current_user.favorites << f
-end
+# def add_favorite(playlist)
+#   # f = []
+#   binding.pry
+#   f = Favorite.create(playlist_id: playlist.id, user_id: current_user.id)
+#   @current_user.favorites << f
+# end
 
 def save_to_favorites(selected_playlists)
 
-  puts "Which playlist would you like to save? Type the number from above or 'q' to quit:"
+  puts "Which playlist would you like to save? Type the name from above or 'q' to quit:".colorize(:color => :yellow, :background => :blue)
     user_input = gets.chomp
     if user_input.start_with?("q")
       main_menu
     else
-    playlist = selected_playlists[user_input.to_i - 1]
-  end
+      # binding.pry
+      playlist = selected_playlists[user_input.to_i - 1]
+    end 
 
+    # binding.pry
     if in_user_favorites?(playlist)
       puts "You've already added this playlist to your favorites!"
       puts "Returning you back to the Main Menu in 3...2...1:"
@@ -145,6 +149,7 @@ def save_to_favorites(selected_playlists)
        @current_user.add_favorite(playlist)
         
         puts "#{playlist.name} added to your favorites!"
+        view_user_favorites
       when "n", "no"
         puts "Returning to main menu..."
        main_menu
@@ -167,21 +172,10 @@ def save_to_favorites(selected_playlists)
 
 
 # view favorites method
-
-def view_user_favorites
-  binding.pry 
-  user_favorite_playlist = @current_user.playlists.all
-  binding.pry 
-  puts "Here are your favorites playlists!"
-  user_favorite_playlist.each do |playlist|
-    Favorite.playlist(name)
-  end
-
-end
   
   
 def view_user_favorites
-  faves = @current_user.favorites
+  faves = @current_user.favorites.reload
 
   if faves.empty?
     
@@ -197,9 +191,18 @@ def view_user_favorites
       sleep(0.5)
     end
     sleep(4)
-    puts "Returning to main menu..."
+    puts "Would like to see the songs of one of your favorite playlist or return to Main Menu."
     sleep(3)
-    main_menu
+    user_input = gets.chomp
+    case user_input
+    when "y", "yes"
+       show_playlist_songs
+              
+    when "n", "no"
+      puts "Returning to main menu..."
+      main_menu
+    end
+
   end
 
 end
@@ -218,6 +221,10 @@ end
       playlist_songs.each do |song|
         puts song.name
       end
+      sleep(5)
+      puts "Now returning to the main menu..."
+      sleep(3)
+      main_menu
   end
 
 #________________________________________________________________
@@ -270,15 +277,17 @@ end
   def main_menu
     puts "MAIN MENU"
   
-    puts "1. Find a playlist by mood"
-    puts "2. View your favorite playlists"
-    puts "3. View a playlist's songs"
-    puts "4. Delete a playlist from favorites"
-    puts "5. Exit"
+    puts "1. Find a playlist by mood".colorize(:color => :light_blue, :background => :red)
+    puts "2. View your favorite playlists".colorize(:color => :yellow, :background => :blue)
+    puts "3. View a playlist's songs".colorize(:color => :red, :background => :white)
+    puts "4. Delete a playlist from favorites".colorize(:color => :green, :background => :blue)
+    puts "5. Exit".colorize(:color => :light_blue, :background => :red)
     choice = gets.chomp
     menu_selection(choice)
   end
-
+  puts "DISCLAIMER"
+  puts "If you or someone you know has added the 'Someone's Got The Blues: Who Broke Up With You'? playlist"
+  puts "How about trying out this new app called 'Ice Breaker' to get back in the dating game'"
   def menu_selection(choice)
     case choice
     when "1"
@@ -305,6 +314,7 @@ abort("EXIT!!")
   #_________________________________________________
   
   def run
+    
       print "Please enter your first name: "
       user_input = gets.chomp
       @current_user = User.find_or_create_by(name: user_input)
@@ -314,12 +324,13 @@ abort("EXIT!!")
   
       puts "MAIN MENU"
   
-      puts "1. Find a playlist by mood"
-      puts "2. View a user's favorite playlists"
-      puts "3. View songs from a playlist"
-      puts "4. Delete playlist from favorite"
-      puts "5. Exit"
+      puts "1. Find a playlist by mood".colorize(:color => :light_blue, :background => :red)
+      puts "2. View your favorite playlists".colorize(:color => :yellow, :background => :blue)
+      puts "3. View a playlist's songs".colorize(:color => :red, :background => :white)
+      puts "4. Delete a playlist from favorites".colorize(:color => :green, :background => :blue)
+      puts "5. Exit".colorize(:color => :light_blue, :background => :red)
   
+
       choice = gets.chomp
 
       
@@ -329,7 +340,8 @@ abort("EXIT!!")
      
       main_menu
       show_playlist_songs
-     
+      
+      
     end
     
    run
