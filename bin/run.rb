@@ -112,19 +112,53 @@ end
 # here we are iterating thrpugh the fav to make sure that the fav is in the user's favorited playlists
 
 
+def in_user_favorites?(playlist)
+  # checks user's favorites to make sure it hasn't been added yet
+  @current_user.favorites.each do |fav|
+    if fav.playlist_id == playlist.id
+      return true
+    end
+  end
+  false
+end
+
+def add_favorite(playlist)
+  f = []
+  f = Favorite.create(playlist_id: playlist.id, user_id: self.id)
+  @current_user.favorites << f
+end
+
 def save_to_favorites(selected_playlists)
 
-  puts "Save #{selected_playlists}? (y/n)"
-      choice = gets.chomp
-      case choice
+  puts "Which playlist would you like to save? Type the number (q to quit):"
+    user_input = gets.chomp
+    if user_input.start_with?("q")
+      main_menu
+    else
+    playlist = selected_playlists[user_input.to_i - 1]
+  end
+
+    if in_user_favorites?(playlist)
+      puts "You've already added this playlist to your favorites!"
+    else
+      puts "Save #{playlist.name}? (y/n)"
+      user_input = gets.chomp
+
+      case user_input
       when "y", "yes"
-        puts "#{playlist} added to your favorites!"
+       @current_user.add_favorite(playlist)
+        
+        puts "#{playlist.name} added to your favorites!"
       when "n", "no"
         puts "Returning to main menu..."
-      else
+       main_menu
+     
         puts "Invalid input!"
       end
     end
+  end
+
+
 
     
 
@@ -151,7 +185,7 @@ end
   
   
 def view_user_favorites
-  faves = @current_user.favorites.reload
+  faves = @current_user.favorites
 
   if faves.empty?
     
@@ -194,18 +228,24 @@ end
     main_menu
   end
   
+  #sets the current users 
+ 
   def display_faves(favorites)
     puts "Here are all your favorites:"
     favorites.each_with_index do |fave, i|
       playlist = Playlist.find(fave.playlist_id)
       puts "#{i+1}. #{playlist.name}"
     end
+
+    # display favorites in a numerated list according to the index that 
+    # belongs to each favorite
+    sleep(3)
     
     print "Which playlist would you like to remove from favorites? "
     user_input = gets.chomp.to_i
     playlist = Playlist.find(favorites[user_input-1].playlist_id)
     print "Confirm deletion of #{playlist.name}? (y/n) "
-    user_input = gets.chomp.downcase
+    user_input = gets.chomp
     if user_input.start_with?("y")
       playlist
     end
@@ -219,8 +259,8 @@ end
     puts "1. Find a playlist by mood"
     puts "2. View your favorite playlists"
     puts "3. View a playlist's songs"
-    puts "5. Delete a playlist from favorites"
-    puts "4. exit"
+    puts "4. Delete a playlist from favorites"
+    puts "5. exit"
     choice = gets.chomp
     menu_selection(choice)
   end
