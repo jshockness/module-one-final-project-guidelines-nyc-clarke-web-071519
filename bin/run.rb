@@ -167,6 +167,18 @@ def save_to_favorites(selected_playlists)
 
 
 # view favorites method
+
+def view_user_favorites
+  binding.pry 
+  user_favorite_playlist = @current_user.playlists.all
+  binding.pry 
+  puts "Here are your favorites playlists!"
+  user_favorite_playlist.each do |playlist|
+    Favorite.playlist(name)
+  end
+
+end
+  
   
 def view_user_favorites
   faves = @current_user.favorites
@@ -307,6 +319,6 @@ abort("EXIT!!")
       
      
     end
-  
+
    run
   

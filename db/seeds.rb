@@ -255,9 +255,7 @@ throwback_songs.each do |song|
 end
 
 
-fave_id = Favorite.create(user_id: User.first.id, playlist_id: drake_playlist.id)
-fave_id = Favorite.create(user_id: User.first.id, playlist_id: sad_playlist.id)
+ Favorite.create(user_id: User.first.id, playlist_id: drake_playlist.id)
+ Favorite.create(user_id: User.first.id, playlist_id: sad_playlist.id)
 
-fave_id = Favorite.create(user_id: User.last.id, playlist_id: workout_playlist.id)
-fave_id = Favorite.create(user_id: User.last.id, playlist_id: dance_playlist.id)
-
+ 
