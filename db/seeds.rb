@@ -256,4 +256,3 @@ end
 
 
 Favorite.create(user_id: User.first.id, playlist_id: drake_playlist.id)
-Favorite.create(user_id: user.id, playlist_id: playlist.id)
