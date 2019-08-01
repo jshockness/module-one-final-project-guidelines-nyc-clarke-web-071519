@@ -143,6 +143,11 @@ def save_to_favorites(selected_playlists)
   #____________________________________________________________
 
   # show songs from a playlist
+  def show_playlist_songs
+  
+
+  end
+
 
 
 
