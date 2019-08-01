@@ -123,11 +123,12 @@ def in_user_favorites?(playlist)
   false
 end
 
-def add_favorite(playlist)
-  f = []
-  f = Favorite.create(playlist_id: playlist.id, user_id: user.id)
-  @current_user.favorites << f
-end
+# def add_favorite(playlist)
+#   # f = []
+#   binding.pry
+#   f = Favorite.create(playlist_id: playlist.id, user_id: current_user.id)
+#   @current_user.favorites << f
+# end
 
 def save_to_favorites(selected_playlists)
 
@@ -136,9 +137,11 @@ def save_to_favorites(selected_playlists)
     if user_input.start_with?("q")
       main_menu
     else
-    playlist = selected_playlists[user_input.to_i - 1]
-  end
+      # binding.pry
+      playlist = selected_playlists[user_input.to_i - 1]
+    end 
 
+    # binding.pry
     if in_user_favorites?(playlist)
       puts "You've already added this playlist to your favorites!"
       puts "Returning you back to the Main Menu in 3...2...1:"
@@ -152,6 +155,7 @@ def save_to_favorites(selected_playlists)
        @current_user.add_favorite(playlist)
         
         puts "#{playlist.name} added to your favorites!"
+        view_user_favorites
       when "n", "no"
         puts "Returning to main menu..."
        main_menu
@@ -175,21 +179,21 @@ def save_to_favorites(selected_playlists)
 
 # view favorites method
 
-def view_user_favorites
-  # binding.pry 
-  user_favorite_playlist = @current_user.playlists.all
-  # binding.pry 
-  puts "Here are your favorites playlists!"
-  user_favorite_playlist.each do |playlist|
-    # binding.pry
-    puts "This is your #{playlist.name} with a mood of #{playlist.mood}"
-  end
-  main_menu
-end
+# def view_user_favorites
+#   # binding.pry 
+#   user_favorite_playlist = @current_user.playlists
+#   # binding.pry 
+#   puts "Here are your favorites playlists!"
+#   user_favorite_playlist.each do |playlist|
+#     # binding.pry
+#     puts "This is your #{playlist.name} with a mood of #{playlist.mood}"
+#   end
+#   main_menu
+# end
   
   
 def view_user_favorites
-  faves = @current_user.favorites
+  faves = @current_user.favorites.reload
 
   if faves.empty?
     
@@ -205,9 +209,18 @@ def view_user_favorites
       sleep(0.5)
     end
     sleep(4)
-    puts "Returning to main menu..."
+    puts "Would like to see the songs of one of your favorite playlist or return to Main Menu."
     sleep(3)
-    main_menu
+    user_input = gets.chomp
+    case user_input
+    when "y", "yes"
+       show_playlist_songs
+              
+    when "n", "no"
+      puts "Returning to main menu..."
+      main_menu
+    end
+
   end
 
 end
