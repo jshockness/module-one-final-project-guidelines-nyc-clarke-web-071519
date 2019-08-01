@@ -3,6 +3,9 @@ require 'tty-font'
 require 'tty-prompt'
 require 'pry'
 
+
+@current_user = nil
+
 # find playlist by mood, then ask the user if they would like to save playlist
 
 def playlist_search
@@ -14,9 +17,9 @@ def playlist_search
   # if there are only 4 "sad" moods in the db and the user enter 6, it returns 
   selected_playlists = view_playlists(playlist_array)
   # it displays the selected playlists and gives the user the number of playlists that are associated with that mood
-  mms = mood_menu
+  sm =second_menu
   # defining the mood menu
-  mood_menu_selection(mms, selected_playlists)
+  second_menu_selection(sm, selected_playlists)
   # method that when the mood was selected it shows the selected playlists
   main_menu
 end
@@ -82,16 +85,16 @@ def view_playlists(playlist_array)
 end
 sleep(3.0)
 
-def mood_menu
+def second_menu
  
   puts "Please choose one:"
   puts "1. Return to main menu"
-  puts "2. Save a playlist to favorites"
+  puts "2. Save playlist to favorites"
   
   choice = gets.chomp
 end
 
-def mood_menu_selection(choice, selected_playlists=nil)
+def second_menu_selection(choice, selected_playlists)
   case choice
   when "1"
     # return to main menu
@@ -108,30 +111,25 @@ end
 
 # here we are iterating thrpugh the fav to make sure that the fav is in the user's favorited playlists
 
-def save_to_favorites(selected_playlists)
-  isrunning = true
-  while isrunning
-    puts "Which playlist would you like to save? Type the number  or (q to quit):"
-    choice = gets.chomp
-    if choice.start_with?("q")
-      break
-    end
-    playlist = selected_playlists[choice.to_i]
 
-      puts "Save #{playlist.name}? (y/n)"
+def save_to_favorites(selected_playlists)
+
+  puts "Save #{selected_playlists}? (y/n)"
       choice = gets.chomp
       case choice
       when "y", "yes"
-        User.add_favorite(playlist)
-        puts "#{playlist.name} added to your favorites!"
+        puts "#{playlist} added to your favorites!"
       when "n", "no"
         puts "Returning to main menu..."
-        isrunning = false
       else
         puts "Invalid input!"
       end
     end
-  end
+
+    
+
+    
+  
 
 
 
@@ -152,78 +150,77 @@ def view_user_favorites
 end
   
   
+def view_user_favorites
+  faves = @current_user.favorites.reload
 
-
-# _________________________________________________________
-  
-#show most popular favorited by users
-# here we are showing the top favorites playlist that has been favorited by users
-  # we are taking the user input and putting the result in an indexed
-  # order list so that the viewer can see the list in a neat way
-
-  def most_popular_playlists
-    results = Favorite.all.group(:playlist_id).count
-    results = results.sort_by {|x , y|}.uniq
-    puts "There are #{results.count} playlists favorited."
-    print "How many playlists would you like to see?"
-    user_input = gets.chomp.to_i
-  
-    # here we are seeing which users have favorited the same playlists
-    # we are grouping them together
-    # we are iterating through the playlist_id and then sorting the results 
-    # and asking the user how many of the most favorited websites they would like to see
-  
-    if user_input > results.count
-      sleep(2.0)
-        puts "Oops...sorry! You only have #{results.count} playlists favorited!"
-        sleep(3.0)
-        puts "Here are the top #{results.count} playlists!" 
-        sleep(3.0)
-        user_input = results.count
-    end
-  
-    # if the user inputs a number that is greater than the result of how many favorites there are
-    # it prints a sorry message and lets the user enter a number again
-  
-  
-  show_favorites(results, user_input)
-    sleep(5)
-    puts "Screen will clear in 5 seconds!!"
-    sleep(5)
-    system "clear"
+  if faves.empty?
+    
+    puts "You don't have any favorites saved yet!"
+    puts "Returning to main menu..."
     main_menu
+  else
+    
+    puts "Here are your favorite playlists:"
+   
+    faves.each do |fave|
+      puts "#{fave.playlist.name}"
+      sleep(0.5)
     end
-  
-    # here we are showing the favorites and then the screen will close out 
-    # and go back to the home screen in 5 seconds
-  
-  
-  def show_favorites(results, user_input)
-    puts "The top #{user_input} playlists are:"
-    results [0...user_input].each_with_index do |result, i|
-        playlist = Playlist.find(result[0])
-        puts "#{i+1}. #{playlist.name}"
-        sleep(1.0)
-    end
+    
+    puts "Returning to main menu..."
+    main_menu
   end
+
+end
+
   #____________________________________________________________
 
   # show songs from a playlist
+  def show_playlist_songs
+  
+
+  end
+
+#________________________________________________________________
+  #delete playlist from user's favorite
 
 
 
 
-
+  def delete_playlist
+    favorites = @current_user.favorites
+    fav_to_delete = display_faves(favorites)
+    @current_user.delete_favorite(fav_to_delete)
+    main_menu
+  end
+  
+  def display_faves(favorites)
+    puts "Here are all your favorites:"
+    favorites.each_with_index do |fave, i|
+      playlist = Playlist.find(fave.playlist_id)
+      puts "#{i+1}. #{playlist.name}"
+    end
+    
+    print "Which playlist would you like to remove from favorites? "
+    user_input = gets.chomp.to_i
+    playlist = Playlist.find(favorites[user_input-1].playlist_id)
+    print "Confirm deletion of #{playlist.name}? (y/n) "
+    user_input = gets.chomp.downcase
+    if user_input.start_with?("y")
+      playlist
+    end
+  end
+  
   #________________________________________________________________
 
   def main_menu
     puts "MAIN MENU"
   
-    puts "1. find a playlist by mood"
-    puts "2. view your favorite playlists"
-    puts "3. view most popular playlist among users"
-    puts "4. view songs from a playlist"
-    puts "5. exit"
+    puts "1. Find a playlist by mood"
+    puts "2. View your favorite playlists"
+    puts "3. View a playlist's songs"
+    puts "5. Delete a playlist from favorites"
+    puts "4. exit"
     choice = gets.chomp
     menu_selection(choice)
   end
@@ -237,11 +234,10 @@ end
       # view user's favorite playlist
       view_user_favorites
     when "3"
-      #view_most_popular_playlist
-      most_popular_playlists
-    when "4"
       show_playlist_songs
       # show a user's playlist songs
+    when "4"
+      delete_playlist
     when "5", "exit"
       exit
 exit!
@@ -255,16 +251,18 @@ abort("EXIT!!")
   
   def run
       print "Please enter your first name: "
-      name = gets.chomp
-  
-      puts "Hello, #{name}, please type in a number 1-5 "
+      user_input = gets.chomp
+      @current_user = User.find_or_create_by(name: user_input)
+
+   
+      puts "Hello, #{@current_user.name}, please type in a number 1-4"
   
       puts "MAIN MENU"
   
-      puts "1. find a playlist by mood"
-      puts "2. view your favorite playlists"
-      puts "3. view most popular playlist among users"
-      puts "4. view songs from a playlist"
+      puts "1. Find a playlist by mood"
+      puts "2. View a user's favorite playlists"
+      puts "3. View songs from a playlist"
+      puts "4. Delete playlist from favorite"
       puts "5. exit"
   
       choice = gets.chomp
