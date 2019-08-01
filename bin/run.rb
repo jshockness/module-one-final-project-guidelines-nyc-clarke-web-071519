@@ -226,6 +226,10 @@ end
       playlist_songs.each do |song|
         puts song.name
       end
+      sleep(5)
+      puts "Now returning to the main menu..."
+      sleep(3)
+      main_menu
   end
 
 #________________________________________________________________
@@ -313,7 +317,7 @@ abort("EXIT!!")
       @current_user = User.find_or_create_by(name: user_input)
 
    
-      puts "Hello, #{@current_user.name}, please type in a number 1-4"
+      puts "Hello, #{@current_user.name}, please type in a number 1-5"
   
       puts "MAIN MENU"
   
@@ -334,6 +338,6 @@ abort("EXIT!!")
       
      
     end
-    show_playlist_songs
-  #  run
+    
+   run
   
