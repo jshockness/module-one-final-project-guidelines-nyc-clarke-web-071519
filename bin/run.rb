@@ -123,44 +123,42 @@ def in_user_favorites?(playlist)
 end
 
 def add_favorite(playlist)
+  f = []
   f = Favorite.create(playlist_id: playlist.id, user_id: self.id)
-  # $username.favorites << f
+  @current_user.favorites << f
 end
 
 def save_to_favorites(selected_playlists)
-  isrunning = true
-  while isrunning
-    puts
-    puts "Which playlist would you like to save? Type the number (q to quit):"
+
+  puts "Which playlist would you like to save? Type the number (q to quit):"
     user_input = gets.chomp
     if user_input.start_with?("q")
-      break
-    end
+      main_menu
+    else
     playlist = selected_playlists[user_input.to_i - 1]
+  end
 
     if in_user_favorites?(playlist)
-      puts
       puts "You've already added this playlist to your favorites!"
-      next
     else
-      puts
       puts "Save #{playlist.name}? (y/n)"
       user_input = gets.chomp
+
       case user_input
       when "y", "yes"
        @current_user.add_favorite(playlist)
-        puts
+        
         puts "#{playlist.name} added to your favorites!"
       when "n", "no"
         puts "Returning to main menu..."
-        isrunning = false
-      else
+       main_menu
+     
         puts "Invalid input!"
       end
     end
   end
 
-end
+
 
     
 
@@ -175,7 +173,7 @@ end
 # view favorites method
   
 def view_user_favorites
-  faves = @current_user.favorites.reload
+  faves = @current_user.favorites
 
   if faves.empty?
     
