@@ -3,7 +3,7 @@ require 'tty-font'
 require 'tty-prompt'
 require 'pry'
 
-
+@prompt = TTY::Prompt.new
 @current_user = nil
 
 # find playlist by mood, then ask the user if they would like to save playlist
@@ -58,8 +58,8 @@ def get_playlist_limit(playlist_array, mood)
   # when the user does enter a mood that is associated with the playlist, it allows the user
   # to choose how many they would like to see
 
-  puts "Here are #{playlist_array.length} playlists that include #{mood}."    
-  puts "Press ENTER to view the playlists:"
+  puts "Here is the #{playlist_array.length} playlist that include #{mood}."    
+  puts "Press ENTER to view the playlist:"
   
   choice = gets.chomp.to_i
   
@@ -208,8 +208,16 @@ end
 
   # show songs from a playlist
   def show_playlist_songs
+    name_array = Playlist.all.map do |playlist|
+      playlist.name
+    end
+    user_input = @prompt.select("Choose the playlist you want to view?", name_array)
   
-
+    playlist_songs = Playlist.find_by(name: user_input).songs
+    puts "Here trhe songs to the playlist."
+      playlist_songs.each do |song|
+        puts song.name
+      end
   end
 
 #________________________________________________________________
@@ -222,6 +230,10 @@ def get_playlist_to_delete
   main_menu
   end
   
+  def delete_favorite(playlist)
+    fave_id = Favorite.where(playlist_id: recipe.id, user_id: user.id)
+    Favorite.destroy(fave_id)
+  end
   
  
   def display_faves(favorites)
@@ -314,11 +326,11 @@ abort("EXIT!!")
       
       menu_selection(choice)
 
-      
+     
       main_menu
-      
+      show_playlist_songs
      
     end
-
+    
    run
   
