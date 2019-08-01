@@ -38,7 +38,7 @@ def create_playlist_array(mood)
       end
     end
   end
-  return array1.uniq
+  return array1
 end
 
 # here we are creating an array that takes in the users input of mood and is selecting the array of moods that 
@@ -47,28 +47,22 @@ end
 def get_playlist_limit(playlist_array, mood)
  
   # if the user enters a mood that is not associated with a playlist, the user is prompted to re-enter a mood
+
   if playlist_array.empty?
     puts "Sorry, there are no playlists with #{mood}!"
     puts "Let's try again..."
     
     playlist_search
   end
+
   # when the user does enter a mood that is associated with the playlist, it allows the user
   # to choose how many they would like to see
+
   puts "Here are #{playlist_array.length} playlists that include #{mood}."    
   puts "Press ENTER to view the playlists:"
   
   choice = gets.chomp.to_i
-
-  # here if the user enters they want to view 5 playlists for the mood "sad" but there are only 3
-  # it tells them that there are only 3 playlists and displays the correct number of playlists
-  if choice > playlist_array.length
   
-    puts "Oops! There are only #{playlist_array.length} playlists!"
-    choice = playlist_array.length
-  else
-    choice
-  end
 end
 
 def view_playlists(playlist_array)
@@ -145,7 +139,7 @@ def save_to_favorites(selected_playlists)
     else
       puts "Save #{playlist.name}? (y/n)"
       user_input = gets.chomp
-
+      
       case user_input
       when "y", "yes"
        @current_user.add_favorite(playlist)
@@ -227,6 +221,7 @@ def get_playlist_to_delete
 
     # display favorites in a numerated list according to the index that 
     # belongs to each favorite
+    
     sleep(3)
     
     print "Which playlist would you like to remove from favorites? "
@@ -291,7 +286,7 @@ abort("EXIT!!")
       @current_user = User.find_or_create_by(name: user_input)
 
    
-      puts "Hello, #{@current_user.name}, please type in a number 1-4"
+      puts "Hello, #{@current_user.name}, please type in a number 1-5"
   
       puts "MAIN MENU"
   
