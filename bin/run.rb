@@ -3,7 +3,7 @@ require 'tty-font'
 require 'tty-prompt'
 require 'pry'
 
-
+@prompt = TTY::Prompt.new
 @current_user = nil
 
 # find playlist by mood, then ask the user if they would like to save playlist
@@ -115,6 +115,7 @@ end
 def in_user_favorites?(playlist)
   # checks user's favorites to make sure it hasn't been added yet
   @current_user.favorites.each do |fav|
+    # binding.pry
     if fav.playlist_id == playlist.id
       return true
     end
@@ -175,14 +176,15 @@ def save_to_favorites(selected_playlists)
 # view favorites method
 
 def view_user_favorites
-  binding.pry 
+  # binding.pry 
   user_favorite_playlist = @current_user.playlists.all
-  binding.pry 
+  # binding.pry 
   puts "Here are your favorites playlists!"
   user_favorite_playlist.each do |playlist|
-    Favorite.playlist(name)
+    # binding.pry
+    puts "This is your #{playlist.name} with a mood of #{playlist.mood}"
   end
-
+  main_menu
 end
   
   
@@ -214,8 +216,16 @@ end
 
   # show songs from a playlist
   def show_playlist_songs
+    name_array = Playlist.all.map do |playlist|
+      playlist.name
+    end
+    user_input = @prompt.select("Choose the playlist you want to view?", name_array)
   
-
+    playlist_songs = Playlist.find_by(name: user_input).songs
+    puts "Here trhe songs to the playlist."
+      playlist_songs.each do |song|
+        puts song.name
+      end
   end
 
 #________________________________________________________________
@@ -324,6 +334,6 @@ abort("EXIT!!")
       
      
     end
-
-   run
+    show_playlist_songs
+  #  run
   
