@@ -1,5 +1,5 @@
-# user1 = User.new("Jason")
-# user2 = User.new("Alyssa")
+
+ 
 
 User.destroy_all
 Song.destroy_all
@@ -256,3 +256,8 @@ end
 
 
 Favorite.create(user_id: User.first.id, playlist_id: drake_playlist.id)
+Favorite.create(user_id: User.first.id, playlist_id: sad_playlist.id)
+
+Favorite.create(user_id: User.last.id, playlist_id: workout_playlist.id)
+Favorite.create(user_id: User.last.id, playlist_id: dance_playlist.id)
+

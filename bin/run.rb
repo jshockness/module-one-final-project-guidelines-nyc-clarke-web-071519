@@ -94,7 +94,7 @@ def second_menu
   choice = gets.chomp
 end
 
-def second_menu_selection(choice, selected_playlists)
+def second_menu_selection(choice, selected_playlists=nil)
   case choice
   when "1"
     # return to main menu
@@ -124,13 +124,13 @@ end
 
 def add_favorite(playlist)
   f = []
-  f = Favorite.create(playlist_id: playlist.id, user_id: self.id)
+  f = Favorite.create(playlist_id: playlist.id, user_id: user.id)
   @current_user.favorites << f
 end
 
 def save_to_favorites(selected_playlists)
 
-  puts "Which playlist would you like to save? Type the number (q to quit):"
+  puts "Which playlist would you like to save? Type the number from above or 'q' to quit:"
     user_input = gets.chomp
     if user_input.start_with?("q")
       main_menu
@@ -140,6 +140,8 @@ def save_to_favorites(selected_playlists)
 
     if in_user_favorites?(playlist)
       puts "You've already added this playlist to your favorites!"
+      puts "Returning you back to the Main Menu in 3...2...1:"
+      sleep(3)
     else
       puts "Save #{playlist.name}? (y/n)"
       user_input = gets.chomp
@@ -200,8 +202,9 @@ def view_user_favorites
       puts "#{fave.playlist.name}"
       sleep(0.5)
     end
-    
+    sleep(4)
     puts "Returning to main menu..."
+    sleep(3)
     main_menu
   end
 
@@ -218,17 +221,14 @@ end
 #________________________________________________________________
   #delete playlist from user's favorite
 
-
-
-
-  def delete_playlist
-    favorites = @current_user.favorites
-    fav_to_delete = display_faves(favorites)
-    @current_user.delete_favorite(fav_to_delete)
-    main_menu
+def get_playlist_to_delete
+  favorites = @current_user.favorites
+  fav_to_delete = display_faves(favorites)
+  @current_user.delete_favorite(fav_to_delete)
+  main_menu
   end
   
-  #sets the current users 
+  
  
   def display_faves(favorites)
     puts "Here are all your favorites:"
@@ -246,10 +246,17 @@ end
     playlist = Playlist.find(favorites[user_input-1].playlist_id)
     print "Confirm deletion of #{playlist.name}? (y/n) "
     user_input = gets.chomp
+
     if user_input.start_with?("y")
       playlist
     end
+
+  if user_input.start_with?("n")
+    puts "You chose not to delete #{playlist.name}...returning you back to the Main Menu"
+    sleep(3)
+    main_menu
   end
+end
   
   #________________________________________________________________
 
@@ -260,7 +267,7 @@ end
     puts "2. View your favorite playlists"
     puts "3. View a playlist's songs"
     puts "4. Delete a playlist from favorites"
-    puts "5. exit"
+    puts "5. Exit"
     choice = gets.chomp
     menu_selection(choice)
   end
@@ -277,7 +284,8 @@ end
       show_playlist_songs
       # show a user's playlist songs
     when "4"
-      delete_playlist
+      
+    get_playlist_to_delete
     when "5", "exit"
       exit
 exit!
@@ -303,7 +311,7 @@ abort("EXIT!!")
       puts "2. View a user's favorite playlists"
       puts "3. View songs from a playlist"
       puts "4. Delete playlist from favorite"
-      puts "5. exit"
+      puts "5. Exit"
   
       choice = gets.chomp
 
@@ -311,6 +319,7 @@ abort("EXIT!!")
       
       menu_selection(choice)
 
+      
       main_menu
       
      
