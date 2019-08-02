@@ -26,7 +26,7 @@ def playlist_search
 end
 
 def get_mood_from_user
-   puts "Please enter a mood:".colorize(:color => :light_blue, :background => :red)
+   puts "Please enter a mood:('Happy', 'Sad', 'Chill', 'Workout', 'Drake', 'Dance', 'Throwback')".colorize(:color => :light_blue, :background => :red)
    mood = gets.chomp
 end
 
@@ -131,11 +131,9 @@ def save_to_favorites(selected_playlists)
     if user_input.start_with?("q")
       main_menu
     else
-      # binding.pry
       playlist = selected_playlists[user_input.to_i - 1]
     end 
 
-    # binding.pry
     if in_user_favorites?(playlist)
       puts "You've already added this playlist to your favorites!"
       puts "Returning you back to the Main Menu in 3...2...1:"
@@ -158,15 +156,6 @@ def save_to_favorites(selected_playlists)
       end
     end
   end
-
-
-
-    
-
-    
-  
-
-
 
 #_________________________________________________
 
@@ -234,41 +223,40 @@ end
 
 def get_playlist_to_delete
   favorites = @current_user.favorites
-  binding.pry
-  fav_to_delete = display_faves(favorites)
-  @current_user.delete_favorite(fav_to_delete)
-  playlist.destroy 
-  main_menu
-  end
+  display_faves(favorites)
+end
   
-  def delete_favorite(playlist)
-    Favorite.where(playlist_id: playlist.id, user_id: @current_user)
-    Favorite.id.destroy
-    
-  end
+def delete_favorite(fav)
+  fav.destroy
+  puts "Now returning to the main menu"
+  sleep(3)
+  main_menu
+end
   
  
-  def display_faves(favorites)
-    puts "Here are all your favorites:"
-    favorites.each_with_index do |fave, i|
-      playlist = Playlist.find(fave.playlist_id)
-      puts "#{i+1}. #{playlist.name}"
-    end
+def display_faves(favorites)
+  puts "Here are all your favorites:"
+  favorites.each_with_index do |fave, i|
+    playlist = Playlist.find(fave.playlist_id)
+    puts "#{i+1}. #{playlist.name}"
+  end
 
-    # display favorites in a numerated list according to the index that 
-    # belongs to each favorite
-    
-    sleep(3)
-    
-    print "Which playlist would you like to remove from favorites? "
-    user_input = gets.chomp.to_i
-    playlist = Playlist.find(favorites[user_input-1].playlist_id)
-    print "Confirm deletion of #{playlist.name}? (y/n) "
-    user_input = gets.chomp
+  
 
-    if user_input.start_with?("y")
-      playlist
-    end
+  # display favorites in a numerated list according to the index that 
+  # belongs to each favorite
+  
+  sleep(3)
+  
+  print "Which playlist would you like to remove from favorites? "
+  user_input = gets.chomp.to_i
+  target_fav = favorites[user_input - 1]
+  print "Confirm deletion? (y/n) "
+  user_input = gets.chomp
+
+  if user_input.start_with?("y")
+    delete_favorite(target_fav)
+  end
 
   if user_input.start_with?("n")
     puts "You chose not to delete #{playlist.name}...returning you back to the Main Menu"
@@ -302,21 +290,20 @@ end
       puts "Current song playing: Lose Yourself by EMINEM, Game of Tone playlist".colorize(:color => :light_blue, :background => :yellow)
       sleep(2)
       puts "Ad 2 of 3".colorize(:red)
-      puts "#{@current_user.name}! Need some style inspo to go with your Game of Tone workout playlist??? Visit the Myo's Closet App today to turn you into a trendy, workout lovin person."
+      puts "#{@current_user.name}! Need some style inspo to go with your Game of Tone workout playlist??? Visit the Myo's Closet App 🛍 🧥 👚 👕 👖 👔 👗 👙 👠 👞 🧣 today to turn you into a trendy, workout lovin person."
       view_user_favorites
     when "3"
       show_playlist_songs
       # show a user's playlist songs
     when "4"
-      
-    get_playlist_to_delete
+      get_playlist_to_delete
 
     when "5", "exit"
       pid = fork{ exec 'afplay', "crymeariver.mov" } 
       puts "Current song playing: Cry Me A River  by Justin Timberlake, Someone's Got The Blues playlist".colorize(:color => :light_blue, :background => :yellow)
       sleep(2)
       puts "Ad 3 of 3".colorize(:red)
-      puts "Before you leave, #{@current_user.name}. If you or someone you know has added the 'Someone's Got the Blues; Who Brokeup with You? playlist, you're in luck. Download the Ice Breaker app that will help you get over the depressing fact that you're single😢😢😢😢😢😢 by helping you get back in the dating game to be ready to mingle!!"
+      puts "Before you leave, #{@current_user.name}. If you or someone you know has added the 'Someone's Got the Blues; Who Brokeup with You? playlist, you're in luck. Download the Ice Breaker app that will help you get over the depressing fact that you're single 😢 😢 😢 😢 😢 😢 by helping you get back in the dating game to be ready to mingle!!"
       sleep(20)
       exit
 exit!
@@ -338,10 +325,10 @@ abort("EXIT!!")
       pid = fork{ exec 'afplay', "Location.mov" } 
       puts "Current song playing: Location by Khalid, in the Music and Chill? playlist".colorize(:color => :light_blue, :background => :yellow)
       puts "Ad 1 of 3".colorize(:red)
-      puts "Hi #{@current_user.name} , have you ever been in such a chill mood where you relax, have some wine, but soon forget how many glasses you've had? Have no fear, the Drink Logger 5000 is here! So just sit back, have some wine (or tequila) and add the Music and Chill? playlist to your favorites"
-      sleep(25)
+      puts "Hi #{@current_user.name} , have you ever been in such a chill mood where you relax, have some wine, but soon forget how many glasses you've had? Have no fear, the Drink Logger 5000 is here! So just sit back, have some wine 🍷 (or tequila 🍹) and add the Music and Chill? playlist to your favorites"
+      sleep(20)
       puts "now back to the Mood Music Maker..."
-      sleep(10)
+      sleep(5)
 
       puts "Hello, #{@current_user.name}, please type in a number 1-5"
   

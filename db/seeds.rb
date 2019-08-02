@@ -92,7 +92,7 @@ happy_songs = [Song.create(name: "Happy", artist: "Pharrell Williams"),
     Song.create(name: "Old Town Road (feat. Billy Ray Cyrus)", artist: "Lil Nas X"),
     Song.create(name: "Happpier (feat. Bastille)", artist: "Marshmello")]
 
-happy_playlist = Playlist.create(name: "Happy Playlist", mood: "Happy")
+happy_playlist = Playlist.create(name: "😀 😃 😄 😁 Playlist", mood: "Happy")
 
 happy_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: happy_playlist.id)
@@ -248,7 +248,7 @@ throwback_songs = [Song.create(name: "I Say a Little Prayer", artist: "Aretha Fr
     Song.create(name: "Where My Girls At", artist: "702"),
     Song.create(name: "I Wanna Be Down", artist: "Brandy")]
 
-throwback_playlist = Playlist.create(name: "Throwback Mode: Activated", mood: "Throwback")
+throwback_playlist = Playlist.create(name: "Take Me Back...Wayyy Back", mood: "Throwback")
 
 throwback_songs.each do |song|
     SongPlaylist.create(song_id: song.id, playlist_id: throwback_playlist.id)
