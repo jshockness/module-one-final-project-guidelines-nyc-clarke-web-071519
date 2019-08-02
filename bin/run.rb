@@ -234,6 +234,7 @@ end
 
 def get_playlist_to_delete
   favorites = @current_user.favorites
+  binding.pry
   fav_to_delete = display_faves(favorites)
   @current_user.delete_favorite(fav_to_delete)
   playlist.destroy 
@@ -241,6 +242,8 @@ def get_playlist_to_delete
   end
   
   def delete_favorite(playlist)
+    Favorite.where(playlist_id: playlist.id, user_id: @current_user)
+    Favorite.id.destroy
     
   end
   
