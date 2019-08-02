@@ -72,7 +72,7 @@ def view_playlists(playlist_array)
   # it goes through each playlist by the index and displays them in order on seperate lines
   puts "Here you go!".red
   playlist_array.each_with_index do |playlist, i|
-   sleep(1.5)
+   sleep(0.5)
     puts "#{i+1}. #{playlist.name}"
     
     sleep(1.5)
@@ -126,7 +126,7 @@ end
 
 def save_to_favorites(selected_playlists)
 
-  puts "Which playlist would you like to save? Type the name from above or 'q' to quit:".colorize(:color => :yellow, :background => :blue)
+  puts "Which playlist would you like to save? Type the name from above or 'q' to quit:".colorize(:color => :light_blue, :background => :red)
     user_input = gets.chomp
     if user_input.start_with?("q")
       main_menu
@@ -217,12 +217,14 @@ end
     user_input = @prompt.select("Choose the playlist you want to view?", name_array)
   
     playlist_songs = Playlist.find_by(name: user_input).songs
-    puts "Here trhe songs to the playlist."
+    puts "Here are the songs to the playlist."
       playlist_songs.each do |song|
         puts song.name
       end
       sleep(5)
       puts "Now returning to the main menu..."
+      sleep(1)
+     
       sleep(3)
       main_menu
   end
@@ -277,17 +279,15 @@ end
   def main_menu
     puts "MAIN MENU"
   
-    puts "1. Find a playlist by mood".colorize(:color => :light_blue, :background => :red)
+    puts "1. Find a playlist by mood".colorize(:color => :yellow, :background => :blue)
     puts "2. View your favorite playlists".colorize(:color => :yellow, :background => :blue)
-    puts "3. View a playlist's songs".colorize(:color => :red, :background => :white)
-    puts "4. Delete a playlist from favorites".colorize(:color => :green, :background => :blue)
-    puts "5. Exit".colorize(:color => :light_blue, :background => :red)
+    puts "3. View a playlist's songs".colorize(:color => :yellow, :background => :blue)
+    puts "4. Delete a playlist from favorites".colorize(:color => :yellow, :background => :blue)
+    puts "5. Exit".colorize(:color => :yellow, :background => :blue)
     choice = gets.chomp
     menu_selection(choice)
   end
-  puts "DISCLAIMER"
-  puts "If you or someone you know has added the 'Someone's Got The Blues: Who Broke Up With You'? playlist"
-  puts "How about trying out this new app called 'Ice Breaker' to get back in the dating game'"
+  
   def menu_selection(choice)
     case choice
     when "1"
@@ -295,6 +295,12 @@ end
      playlist_search
     when "2"
       # view user's favorite playlist
+      pid = fork{ exec 'afplay', "loseyourself.mov" } 
+      puts "Current song playing: Lose Yourself by EMINEM, Game of Tone playlist".colorize(:color => :light_blue, :background => :yellow)
+      sleep(2)
+      puts "Ad 2 of 3".colorize(:red)
+      puts "#{@current_user.name}! Need some style inspo to go with your Game of Tone workout playlist??? Visit the Myo's Closet App"
+      puts "Today to turn you into a trendy, workout lovin person."
       view_user_favorites
     when "3"
       show_playlist_songs
@@ -303,9 +309,18 @@ end
       
     get_playlist_to_delete
     when "5", "exit"
+      pid = fork{ exec 'afplay', "crymeariver.mov" } 
+      puts "Current song playing: Cry Me A River  by Justin Timberlake, Someone's Got The Blues playlist".colorize(:color => :light_blue, :background => :yellow)
+      sleep(2)
+      puts "Ad 3 of 3".colorize(:red)
+      puts "Before you leave, #{@current_user.name}. If you or someone you know has added the 'Someone's Got the Blues; Who Brokeup with You?"
+      puts "playlist, you're in luck. Download the Ice Breaker app that will help you get over the fact that you're single"
+      puts "but hey at least you'll be ready to mingle!!"
+      sleep(20)
       exit
 exit!
 abort("EXIT!!")
+
     end
     menu_selection
   end
@@ -318,17 +333,25 @@ abort("EXIT!!")
       print "Please enter your first name: "
       user_input = gets.chomp
       @current_user = User.find_or_create_by(name: user_input)
+      sleep(5)
+      pid = fork{ exec 'afplay', "Location.mov" } 
+      puts "Current song playing: Location by Khalid, in the Music and Chill? playlist".colorize(:color => :light_blue, :background => :yellow)
+      puts "Ad 1 of 3".colorize(:red)
+      puts "Hi #{@current_user.name} , have you ever been in such a chill mood where you relax, have some wine, and soon forget how many glasses you've had?"
+      puts "Have no fear, the Drink Logger 5000 is here! So just sit back, have some win (or tequila) and add the Music and Chill? playlist to your favorites"
+      sleep(25)
+      puts "now back to the Mood Music Maker..."
+      sleep(10)
 
-   
       puts "Hello, #{@current_user.name}, please type in a number 1-5"
   
       puts "MAIN MENU"
   
-      puts "1. Find a playlist by mood".colorize(:color => :light_blue, :background => :red)
+      puts "1. Find a playlist by mood".colorize(:color => :yellow, :background => :blue)
       puts "2. View your favorite playlists".colorize(:color => :yellow, :background => :blue)
-      puts "3. View a playlist's songs".colorize(:color => :red, :background => :white)
-      puts "4. Delete a playlist from favorites".colorize(:color => :green, :background => :blue)
-      puts "5. Exit".colorize(:color => :light_blue, :background => :red)
+      puts "3. View a playlist's songs".colorize(:color => :yellow, :background => :blue)
+      puts "4. Delete a playlist from favorites".colorize(:color => :yellow, :background => :blue)
+      puts "5. Exit".colorize(:color => :yellow, :background => :blue)
   
 
       choice = gets.chomp
@@ -339,7 +362,9 @@ abort("EXIT!!")
 
      
       main_menu
+
       show_playlist_songs
+      
       
       
     end
