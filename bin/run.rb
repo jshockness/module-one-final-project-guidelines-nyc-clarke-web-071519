@@ -236,12 +236,12 @@ def get_playlist_to_delete
   favorites = @current_user.favorites
   fav_to_delete = display_faves(favorites)
   @current_user.delete_favorite(fav_to_delete)
+  playlist.destroy 
   main_menu
   end
   
   def delete_favorite(playlist)
-    fave_id = Favorite.where(playlist_id: recipe.id, user_id: user.id)
-    Favorite.destroy(fave_id)
+    
   end
   
  
@@ -299,8 +299,7 @@ end
       puts "Current song playing: Lose Yourself by EMINEM, Game of Tone playlist".colorize(:color => :light_blue, :background => :yellow)
       sleep(2)
       puts "Ad 2 of 3".colorize(:red)
-      puts "#{@current_user.name}! Need some style inspo to go with your Game of Tone workout playlist??? Visit the Myo's Closet App"
-      puts "Today to turn you into a trendy, workout lovin person."
+      puts "#{@current_user.name}! Need some style inspo to go with your Game of Tone workout playlist??? Visit the Myo's Closet App today to turn you into a trendy, workout lovin person."
       view_user_favorites
     when "3"
       show_playlist_songs
@@ -308,14 +307,13 @@ end
     when "4"
       
     get_playlist_to_delete
+
     when "5", "exit"
       pid = fork{ exec 'afplay', "crymeariver.mov" } 
       puts "Current song playing: Cry Me A River  by Justin Timberlake, Someone's Got The Blues playlist".colorize(:color => :light_blue, :background => :yellow)
       sleep(2)
       puts "Ad 3 of 3".colorize(:red)
-      puts "Before you leave, #{@current_user.name}. If you or someone you know has added the 'Someone's Got the Blues; Who Brokeup with You?"
-      puts "playlist, you're in luck. Download the Ice Breaker app that will help you get over the fact that you're single"
-      puts "but hey at least you'll be ready to mingle!!"
+      puts "Before you leave, #{@current_user.name}. If you or someone you know has added the 'Someone's Got the Blues; Who Brokeup with You? playlist, you're in luck. Download the Ice Breaker app that will help you get over the depressing fact that you're single😢😢😢😢😢😢 by helping you get back in the dating game to be ready to mingle!!"
       sleep(20)
       exit
 exit!
@@ -337,8 +335,7 @@ abort("EXIT!!")
       pid = fork{ exec 'afplay', "Location.mov" } 
       puts "Current song playing: Location by Khalid, in the Music and Chill? playlist".colorize(:color => :light_blue, :background => :yellow)
       puts "Ad 1 of 3".colorize(:red)
-      puts "Hi #{@current_user.name} , have you ever been in such a chill mood where you relax, have some wine, and soon forget how many glasses you've had?"
-      puts "Have no fear, the Drink Logger 5000 is here! So just sit back, have some win (or tequila) and add the Music and Chill? playlist to your favorites"
+      puts "Hi #{@current_user.name} , have you ever been in such a chill mood where you relax, have some wine, but soon forget how many glasses you've had? Have no fear, the Drink Logger 5000 is here! So just sit back, have some wine (or tequila) and add the Music and Chill? playlist to your favorites"
       sleep(25)
       puts "now back to the Mood Music Maker..."
       sleep(10)
